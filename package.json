@@ -2,7 +2,8 @@
   "name": "morphcss-monorepo",
   "private": true,
   "scripts": {
-    "build:node": "cd crates/morphcss_node && npm run build"
+    "build:node": "cd crates/morphcss_node && npm run build",
+    "release": "changeset publish"
   },
   "devDependencies": {
     "@changesets/cli": "^2.31.0",
