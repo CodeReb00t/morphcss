@@ -178,14 +178,16 @@ export default function morphcssPlugin(
     },
 
     resolveId(id) {
-      if (id === VIRTUAL_MODULE_ID) {
-        return RESOLVED_VIRTUAL_MODULE_ID;
+      const [cleanId, query] = id.split("?");
+      if (cleanId === VIRTUAL_MODULE_ID) {
+        return query ? `${RESOLVED_VIRTUAL_MODULE_ID}?${query}` : RESOLVED_VIRTUAL_MODULE_ID;
       }
       return null;
     },
 
     load(id) {
-      if (id === RESOLVED_VIRTUAL_MODULE_ID) {
+      const [cleanId] = id.split("?");
+      if (cleanId === RESOLVED_VIRTUAL_MODULE_ID) {
         return ensureCompiler().generateCss();
       }
       return null;

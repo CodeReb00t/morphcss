@@ -1,5 +1,11 @@
 # @morphcss/vite-plugin
 
+## 0.2.2
+
+### Patch Changes
+
+- Support query parameters (like ?url) on virtual module imports for TanStack Start compatibility.
+
 ## 0.2.1
 
 ### Patch Changes
