@@ -35,12 +35,18 @@ impl CssProperty {
     }
 
     pub fn canonicalize(&mut self) {
-        
         let prop = camel_to_kebab(self.property.trim());
         let val = self.value.trim();
 
         let unitless_properties = [
-            "opacity", "font-weight", "z-index", "line-height", "flex-grow", "flex-shrink", "order", "flex",
+            "opacity",
+            "font-weight",
+            "z-index",
+            "line-height",
+            "flex-grow",
+            "flex-shrink",
+            "order",
+            "flex",
         ];
 
         if !unitless_properties.contains(&prop.as_str()) && val.parse::<f64>().is_ok() {
@@ -52,7 +58,6 @@ impl CssProperty {
         }
     }
 
-   
     pub fn to_canonical_string(&self) -> String {
         match &self.condition {
             Some(cond) => format!("{}|{}:{}", cond, self.property, self.value),

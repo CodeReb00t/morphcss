@@ -25,24 +25,13 @@ impl MorphCompiler {
     }
 
     #[napi]
-    pub fn compile(
-        &self,
-        source: String,
-        filename: String,
-    ) -> Result<CompileResult> {
+    pub fn compile(&self, source: String, filename: String) -> Result<CompileResult> {
         let transformed = self
             .plugin
             .transform(&source, &filename)
-            .map_err(|err| {
-                Error::new(
-                    Status::GenericFailure,
-                    format!("{:?}", err),
-                )
-            })?;
+            .map_err(|err| Error::new(Status::GenericFailure, format!("{:?}", err)))?;
 
-        Ok(CompileResult {
-            code: transformed,
-        })
+        Ok(CompileResult { code: transformed })
     }
 
     #[napi]
@@ -60,9 +49,7 @@ impl MorphCompiler {
     #[napi]
     pub fn generate_css_hash(&self) -> String {
         let css = self.plugin.generate_css();
-        blake3::hash(css.as_bytes())
-            .to_hex()
-            .to_string()
+        blake3::hash(css.as_bytes()).to_hex().to_string()
     }
 
     #[napi]
