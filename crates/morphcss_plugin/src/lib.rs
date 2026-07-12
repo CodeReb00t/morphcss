@@ -38,10 +38,9 @@ impl MorphCssPlugin {
 
         let mut replacements = Vec::new();
 
-       
         for class_literal in extraction_result.class_name_literals {
             let mut class_hashes = Vec::new();
-            
+
             for class in class_literal.value.split_whitespace() {
                 if let Some(hashes) = self.ingester.utility_map.get(class) {
                     for hash in hashes.split_whitespace() {
@@ -52,11 +51,11 @@ impl MorphCssPlugin {
                     class_hashes.push(class.to_string());
                 }
             }
-            
+
             let class_str = class_hashes.join(" ");
             let start = class_literal.span.start as usize;
             let end = class_literal.span.end as usize;
-            
+
             replacements.push((start, end, format!("\"{}\"", class_str)));
         }
 
@@ -68,7 +67,7 @@ impl MorphCssPlugin {
                 class_hashes.push(hash.clone());
                 file_hashes.push(hash);
             }
-            
+
             let class_str = class_hashes.join(" ");
             let replacement = if call.dynamic_variables.is_empty() {
                 format!("({{ className: \"{}\" }})", class_str)
@@ -83,14 +82,14 @@ impl MorphCssPlugin {
                 vars_obj.push_str(" }");
                 format!("({{ className: \"{}\", style: {} }})", class_str, vars_obj)
             };
-            
+
             let start = call.span.start as usize;
             let end = call.span.end as usize;
             replacements.push((start, end, replacement));
         }
-        
-        replacements.sort_by(|a, b| b.0.cmp(&a.0));
-        
+
+        replacements.sort_by_key(|entry| std::cmp::Reverse(entry.0));
+
         for (start, end, replacement) in replacements {
             if start <= transformed_source.len() && end <= transformed_source.len() {
                 transformed_source.replace_range(start..end, &replacement);
@@ -115,6 +114,12 @@ impl MorphCssPlugin {
     }
 }
 
+impl Default for MorphCssPlugin {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -130,10 +135,10 @@ mod tests {
         "#;
 
         let transformed = plugin.transform(source, "app.tsx").unwrap();
-        
+
         assert!(!transformed.contains("css({ display: 'flex', padding: 16 })"));
         assert!(transformed.contains("({ className: \"m_"));
-        
+
         let css = plugin.generate_css();
         assert!(css.contains("display: flex;"));
         assert!(css.contains("padding: 16px;"));
@@ -150,11 +155,11 @@ mod tests {
         "#;
 
         let transformed = plugin.transform(source, "app.tsx").unwrap();
-        
+
         assert!(!transformed.contains("css({"));
         assert!(transformed.contains("{ className: \"m_"));
         assert!(transformed.contains("style: { \"--0\": color } }"));
-        
+
         let css = plugin.generate_css();
         assert!(css.contains("background: var(--0);"));
         assert!(css.contains("padding: 16px;"));
@@ -163,14 +168,14 @@ mod tests {
     #[test]
     fn test_plugin_utility_ingestion_and_hybrid_equivalence() {
         let mut plugin = MorphCssPlugin::new();
-        
+
         // 1. Ingest CSS (simulate Tailwind output)
         let tailwind_css = r#"
             .flex { display: flex; }
             .p-4 { padding: 16px; }
         "#;
         plugin.ingest_utility_css(tailwind_css).unwrap();
-        
+
         // 2. Parse a component that uses both utility and object syntaxes
         let source = r#"
             export function HybridComponent() {
@@ -179,17 +184,17 @@ mod tests {
             }
         "#;
         let transformed = plugin.transform(source, "app.tsx").unwrap();
-        
+
         // The object syntax and the utility syntax MUST produce identical hashes
         // Object Syntax replacement output (which is just the hashed strings):
         let object_class_str = transformed
-            .split("const objectStyle = \"")
+            .split("const objectStyle = ({ className: \"")
             .nth(1)
             .unwrap()
-            .split("\";")
+            .split("\"")
             .next()
             .unwrap();
-            
+
         // Utility syntax replacement output (in the JSX):
         let utility_class_str = transformed
             .split("className=\"")
@@ -198,7 +203,7 @@ mod tests {
             .split("\"")
             .next()
             .unwrap();
-            
+
         // Validate! Both authoring modes compiled to the exact same atomic hashes.
         // Wait, `css(...)` might have a different order of properties?
         // object_class_str will be "m_hash(display) m_hash(padding)".

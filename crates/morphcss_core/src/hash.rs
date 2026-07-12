@@ -4,7 +4,7 @@ pub fn generate_hash(canonical_str: &str) -> String {
     let mut hasher = Hasher::new();
     hasher.update(canonical_str.as_bytes());
     let hash = hasher.finalize();
-    
+
     let hex_hash = hash.to_hex();
     format!("m_{}", &hex_hash[..8])
 }

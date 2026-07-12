@@ -29,15 +29,18 @@ impl AtomicCache {
         }
 
         let hash = generate_hash(&canonical_str);
-        self.property_to_hash.insert(canonical_str.clone(), hash.clone());
+        self.property_to_hash
+            .insert(canonical_str.clone(), hash.clone());
 
-       
         let rule = match &prop.condition {
             Some(cond) => {
                 if cond.starts_with(':') {
                     format!(".{}{} {{ {}: {}; }}", hash, cond, prop.property, prop.value)
                 } else if cond.starts_with('@') {
-                    format!("{} {{ .{} {{ {}: {}; }} }}", cond, hash, prop.property, prop.value)
+                    format!(
+                        "{} {{ .{} {{ {}: {}; }} }}",
+                        cond, hash, prop.property, prop.value
+                    )
                 } else {
                     format!(".{} {{ {}: {}; }}", hash, prop.property, prop.value)
                 }
@@ -52,11 +55,11 @@ impl AtomicCache {
     pub fn register_file(&self, filename: &str, mut hashes: Vec<String>) {
         hashes.sort();
         hashes.dedup();
-        
+
         for hash in &hashes {
             *self.hash_refcount.entry(hash.clone()).or_insert(0) += 1;
         }
-        
+
         self.file_hashes.insert(filename.to_string(), hashes);
     }
     pub fn invalidate_file(&self, filename: &str) {
@@ -69,7 +72,7 @@ impl AtomicCache {
                         remove = true;
                     }
                 }
-                
+
                 if remove {
                     self.hash_refcount.remove(&hash);
                 }
@@ -81,18 +84,24 @@ impl AtomicCache {
         let mut css_rules = Vec::new();
         for kv in self.hash_to_rule.iter() {
             let hash = kv.key();
-            let is_active = self.hash_refcount.get(hash).map_or(false, |r| *r > 0);
+            let is_active = self.hash_refcount.get(hash).is_some_and(|r| *r > 0);
             if is_active {
                 css_rules.push(kv.value().clone());
             }
         }
-        
+
         css_rules.sort();
         css_rules.join("\n")
     }
 
     pub fn get_stats(&self) -> (usize, usize) {
         (self.hash_to_rule.len(), self.file_hashes.len())
+    }
+}
+
+impl Default for AtomicCache {
+    fn default() -> Self {
+        Self::new()
     }
 }
 
@@ -103,27 +112,30 @@ mod tests {
     #[test]
     fn test_atomic_cache_refcounting() {
         let cache = AtomicCache::new();
-        
+
         let hash1 = cache.process_property(CssProperty::new("display", "flex"));
         let hash2 = cache.process_property(CssProperty::new("padding", "16"));
-        
+
         // Register file1 using hash1 and hash2
         cache.register_file("file1.ts", vec![hash1.clone(), hash2.clone()]);
-        
+
         // Register file2 using only hash1
         cache.register_file("file2.ts", vec![hash1.clone()]);
-        
+
         let css = cache.generate_css();
         assert!(css.contains("display: flex;"));
         assert!(css.contains("padding: 16px;"));
-        
+
         // Invalidate file1. hash2 refcount drops to 0. hash1 refcount drops to 1.
         cache.invalidate_file("file1.ts");
-        
+
         let css2 = cache.generate_css();
         assert!(css2.contains("display: flex;"));
-        assert!(!css2.contains("padding: 16px;"), "Hash2 should be completely removed from generated CSS");
-        
+        assert!(
+            !css2.contains("padding: 16px;"),
+            "Hash2 should be completely removed from generated CSS"
+        );
+
         // Invalidate file2. hash1 refcount drops to 0.
         cache.invalidate_file("file2.ts");
         let css3 = cache.generate_css();
