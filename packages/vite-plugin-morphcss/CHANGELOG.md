@@ -1,5 +1,14 @@
 # @morphcss/vite-plugin
 
+## 0.2.1
+
+### Patch Changes
+
+- Fix workspace dependency resolution in published packages.
+- Updated dependencies
+  - @morph-css/core@0.2.1
+  - @morph-css/node@0.2.1
+
 ## 0.2.0
 
 ### Minor Changes
