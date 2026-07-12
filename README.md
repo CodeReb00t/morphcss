@@ -5,9 +5,9 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/morphcss/morphcss/actions"><img src="https://img.shields.io/github/actions/workflow/status/morphcss/morphcss/ci.yml?branch=main" alt="Build Status"></a>
+  <a href="https://github.com/morphcss/morphcss/actions"><img src="https://img.shields.io/github/actions/workflow/status/morphcss/morphcss/ci.yml?branch=master" alt="Build Status"></a>
   <a href="https://npmjs.com/package/morphcss"><img src="https://img.shields.io/npm/v/morphcss.svg" alt="npm package"></a>
-  <a href="https://github.com/morphcss/morphcss/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/morphcss.svg" alt="License"></a>
+  <a href="https://github.com/morphcss/morphcss/blob/master/LICENSE"><img src="https://img.shields.io/npm/l/morphcss.svg" alt="License"></a>
 </p>
 
 MorphCSS is a blazingly fast, highly concurrent Atomic CSS engine. It provides the ergonomics of Tailwind, the type-safety of PandaCSS, and the zero-runtime architecture of Vanilla Extract—all while keeping a high-performance Rust compiler as the single source of truth.
@@ -42,7 +42,7 @@ export default defineConfig({
     react(),
     morphcss({
       utilities: "./src/tailwind.css", // Optional: ingest Tailwind-like utilities
-      output: "morph.css"
+      output: "morph.css",
     }),
   ],
 });
@@ -57,15 +57,16 @@ import { css } from "morphcss";
 const buttonClass = css({
   display: "flex",
   padding: "16px",
-  backgroundColor: "blue"
+  backgroundColor: "blue",
 });
 
 // 2. Dynamic variable extraction
-const container = (color: string) => css({
-  borderColor: color,
-  borderWidth: "1px",
-  borderStyle: "solid"
-});
+const container = (color: string) =>
+  css({
+    borderColor: color,
+    borderWidth: "1px",
+    borderStyle: "solid",
+  });
 
 export default function App() {
   return (
