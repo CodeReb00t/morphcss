@@ -1,0 +1,11 @@
+[package]
+name = "morphcss_plugin"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+morphcss_core = { workspace = true }
+morphcss_parser = { workspace = true }
+morphcss_compiler = { workspace = true }
+oxc_allocator = { workspace = true }
+oxc_span = { workspace = true }

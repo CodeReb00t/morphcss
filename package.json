@@ -1,0 +1,11 @@
+{
+  "name": "morphcss-monorepo",
+  "private": true,
+  "scripts": {
+    "build:node": "cd crates/morphcss_node && npm run build"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.31.0",
+    "@napi-rs/cli": "^3.0.0-alpha.52"
+  }
+}

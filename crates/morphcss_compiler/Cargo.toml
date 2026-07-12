@@ -1,0 +1,13 @@
+[package]
+name = "morphcss_compiler"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+morphcss_core = { workspace = true }
+morphcss_parser = { workspace = true }
+dashmap = { workspace = true }
+rayon = { workspace = true }
+serde = { workspace = true }
+bincode = { workspace = true }
+lightningcss = { workspace = true }

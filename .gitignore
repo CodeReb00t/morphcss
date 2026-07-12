@@ -1,0 +1,21 @@
+# Rust
+target/
+Cargo.lock
+
+# Node
+node_modules/
+dist/
+*.node
+.npm
+npm-debug.log
+yarn-error.log
+pnpm-debug.log
+
+# OS
+.DS_Store
+*.swp
+*.swo
+
+# Project specific
+.env
+.env.*

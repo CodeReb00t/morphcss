@@ -1,0 +1,16 @@
+[package]
+name = "morphcss_node"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+napi = { version = "3.10.3", features = ["napi4", "napi8", "serde-json"] }
+napi-derive = "3.5.9"
+morphcss_plugin = { path = "../morphcss_plugin" }
+blake3 = "1.8"
+
+[build-dependencies]
+napi-build = "2.3.2"
