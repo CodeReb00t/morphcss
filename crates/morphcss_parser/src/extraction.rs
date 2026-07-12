@@ -50,13 +50,11 @@ impl<'a, 'b> Visit<'a> for CssExtractor<'b> {
                     } else if let Some(JSXAttributeValue::ExpressionContainer(container)) =
                         &attr.value
                     {
-                        if let Some(expr) = container.expression.as_expression() {
-                            if let Expression::StringLiteral(lit) = expr {
-                                self.class_name_literals.push(ExtractedClassNameLiteral {
-                                    value: lit.value.to_string(),
-                                    span: lit.span,
-                                });
-                            }
+                        if let Some(Expression::StringLiteral(lit)) = container.expression.as_expression() {
+                            self.class_name_literals.push(ExtractedClassNameLiteral {
+                                value: lit.value.to_string(),
+                                span: lit.span,
+                            });
                         }
                     }
                 }
@@ -68,9 +66,8 @@ impl<'a, 'b> Visit<'a> for CssExtractor<'b> {
         if let Expression::Identifier(ident) = &expr.callee {
             if ident.name == "css" {
                 if let Some(arg) = expr.arguments.first() {
-                    if let Some(arg_expr) = arg.as_expression() {
-                        if let Expression::ObjectExpression(obj) = arg_expr {
-                            let mut properties = Vec::new();
+                    if let Some(Expression::ObjectExpression(obj)) = arg.as_expression() {
+                        let mut properties = Vec::new();
                             let mut dynamic_variables = Vec::new();
                             let mut dynamic_index = 0;
 
@@ -131,7 +128,6 @@ impl<'a, 'b> Visit<'a> for CssExtractor<'b> {
                     }
                 }
             }
-        }
     }
 }
 

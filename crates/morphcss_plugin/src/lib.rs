@@ -8,6 +8,12 @@ pub struct MorphCssPlugin {
     pub ingester: CssIngester,
 }
 
+impl Default for MorphCssPlugin {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl MorphCssPlugin {
     pub fn new() -> Self {
         let cache = Arc::new(AtomicCache::new());
@@ -88,7 +94,7 @@ impl MorphCssPlugin {
             replacements.push((start, end, replacement));
         }
 
-        replacements.sort_by(|a, b| b.0.cmp(&a.0));
+        replacements.sort_by_key(|b| std::cmp::Reverse(b.0));
 
         for (start, end, replacement) in replacements {
             if start <= transformed_source.len() && end <= transformed_source.len() {
@@ -182,10 +188,10 @@ mod tests {
         // The object syntax and the utility syntax MUST produce identical hashes
         // Object Syntax replacement output (which is just the hashed strings):
         let object_class_str = transformed
-            .split("const objectStyle = \"")
+            .split("const objectStyle = ({ className: \"")
             .nth(1)
             .unwrap()
-            .split("\";")
+            .split("\"")
             .next()
             .unwrap();
 

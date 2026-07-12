@@ -1,6 +1,5 @@
 #![deny(clippy::all)]
 
-use blake3;
 use morphcss_plugin::MorphCssPlugin;
 use napi::bindgen_prelude::*;
 use napi_derive::napi;
@@ -17,6 +16,7 @@ pub struct CompileResult {
 
 #[napi]
 impl MorphCompiler {
+    #[allow(clippy::new_without_default)]
     #[napi(constructor)]
     pub fn new() -> Self {
         Self {

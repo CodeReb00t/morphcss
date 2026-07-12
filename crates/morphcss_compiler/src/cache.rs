@@ -10,6 +10,12 @@ pub struct AtomicCache {
     file_hashes: DashMap<String, Vec<String>>,
 }
 
+impl Default for AtomicCache {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl AtomicCache {
     pub fn new() -> Self {
         Self {
@@ -84,7 +90,7 @@ impl AtomicCache {
         let mut css_rules = Vec::new();
         for kv in self.hash_to_rule.iter() {
             let hash = kv.key();
-            let is_active = self.hash_refcount.get(hash).map_or(false, |r| *r > 0);
+            let is_active = self.hash_refcount.get(hash).is_some_and(|r| *r > 0);
             if is_active {
                 css_rules.push(kv.value().clone());
             }
