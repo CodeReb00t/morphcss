@@ -50,7 +50,9 @@ impl<'a, 'b> Visit<'a> for CssExtractor<'b> {
                     } else if let Some(JSXAttributeValue::ExpressionContainer(container)) =
                         &attr.value
                     {
-                        if let Some(Expression::StringLiteral(lit)) = container.expression.as_expression() {
+                        if let Some(Expression::StringLiteral(lit)) =
+                            container.expression.as_expression()
+                        {
                             self.class_name_literals.push(ExtractedClassNameLiteral {
                                 value: lit.value.to_string(),
                                 span: lit.span,
@@ -68,66 +70,57 @@ impl<'a, 'b> Visit<'a> for CssExtractor<'b> {
                 if let Some(arg) = expr.arguments.first() {
                     if let Some(Expression::ObjectExpression(obj)) = arg.as_expression() {
                         let mut properties = Vec::new();
-                            let mut dynamic_variables = Vec::new();
-                            let mut dynamic_index = 0;
+                        let mut dynamic_variables = Vec::new();
+                        let mut dynamic_index = 0;
 
-                            for prop in &obj.properties {
-                                if let ObjectPropertyKind::ObjectProperty(p) = prop {
-                                    let key_name = match &p.key {
-                                        PropertyKey::StaticIdentifier(id) => {
-                                            Some(id.name.to_string())
+                        for prop in &obj.properties {
+                            if let ObjectPropertyKind::ObjectProperty(p) = prop {
+                                let key_name = match &p.key {
+                                    PropertyKey::StaticIdentifier(id) => Some(id.name.to_string()),
+                                    PropertyKey::StringLiteral(lit) => Some(lit.value.to_string()),
+                                    _ => None,
+                                };
+
+                                if let Some(k) = key_name {
+                                    match &p.value {
+                                        Expression::StringLiteral(lit) => {
+                                            properties
+                                                .push(CssProperty::new(k, lit.value.to_string()));
                                         }
-                                        PropertyKey::StringLiteral(lit) => {
-                                            Some(lit.value.to_string())
+                                        Expression::NumericLiteral(lit) => {
+                                            properties
+                                                .push(CssProperty::new(k, lit.value.to_string()));
                                         }
-                                        _ => None,
-                                    };
+                                        _ => {
+                                            // Dynamic value
+                                            let var_name = format!("--{}", dynamic_index);
+                                            dynamic_index += 1;
 
-                                    if let Some(k) = key_name {
-                                        match &p.value {
-                                            Expression::StringLiteral(lit) => {
-                                                properties.push(CssProperty::new(
-                                                    k,
-                                                    lit.value.to_string(),
-                                                ));
-                                            }
-                                            Expression::NumericLiteral(lit) => {
-                                                properties.push(CssProperty::new(
-                                                    k,
-                                                    lit.value.to_string(),
-                                                ));
-                                            }
-                                            _ => {
-                                                // Dynamic value
-                                                let var_name = format!("--{}", dynamic_index);
-                                                dynamic_index += 1;
+                                            let span = p.value.span();
+                                            let val_str = &self.source
+                                                [span.start as usize..span.end as usize];
 
-                                                let span = p.value.span();
-                                                let val_str = &self.source
-                                                    [span.start as usize..span.end as usize];
-
-                                                properties.push(CssProperty::new(
-                                                    k,
-                                                    format!("var({})", var_name),
-                                                ));
-                                                dynamic_variables
-                                                    .push((var_name, val_str.to_string()));
-                                            }
+                                            properties.push(CssProperty::new(
+                                                k,
+                                                format!("var({})", var_name),
+                                            ));
+                                            dynamic_variables.push((var_name, val_str.to_string()));
                                         }
                                     }
                                 }
                             }
-                            if !properties.is_empty() {
-                                self.css_calls.push(ExtractedCssCall {
-                                    span: expr.span,
-                                    properties,
-                                    dynamic_variables,
-                                });
-                            }
+                        }
+                        if !properties.is_empty() {
+                            self.css_calls.push(ExtractedCssCall {
+                                span: expr.span,
+                                properties,
+                                dynamic_variables,
+                            });
                         }
                     }
                 }
             }
+        }
     }
 }
 
