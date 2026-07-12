@@ -20,7 +20,7 @@ MorphCSS is a monorepo managed with `pnpm` and `cargo`.
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/morphcss/morphcss.git
+   git clone https://github.com/CodeReb00t/morphcss.git
    cd morphcss
    ```
 
