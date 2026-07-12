@@ -6,8 +6,8 @@
 
 <p align="center">
   <a href="https://github.com/CodeReb00t/morphcss/actions"><img src="https://img.shields.io/github/actions/workflow/status/CodeReb00t/morphcss/ci.yml?branch=master" alt="Build Status"></a>
-  <a href="https://npmjs.com/package/morphcss"><img src="https://img.shields.io/npm/v/morphcss.svg" alt="npm package"></a>
-  <a href="https://github.com/CodeReb00t/morphcss/blob/master/LICENSE"><img src="https://img.shields.io/npm/l/morphcss.svg" alt="License"></a>
+  <a href="https://npmjs.com/package/@morph-css/core"><img src="https://img.shields.io/npm/v/@morph-css/core.svg" alt="npm package"></a>
+  <a href="https://github.com/CodeReb00t/morphcss/blob/master/LICENSE"><img src="https://img.shields.io/npm/l/@morph-css/core.svg" alt="License"></a>
 </p>
 
 MorphCSS is a blazingly fast, highly concurrent Atomic CSS engine. It provides the ergonomics of Tailwind, the type-safety of PandaCSS, and the zero-runtime architecture of Vanilla Extract—all while keeping a high-performance Rust compiler as the single source of truth.
@@ -24,8 +24,8 @@ MorphCSS is a blazingly fast, highly concurrent Atomic CSS engine. It provides t
 ## Installation
 
 ```bash
-npm install morphcss
-npm install -D @morphcss/vite-plugin
+npm install @morph-css/core
+npm install -D @morph-css/vite-plugin
 ```
 
 ## Quick Start (Vite + React)
@@ -35,7 +35,7 @@ Add the plugin to your `vite.config.ts`:
 ```ts
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
-import morphcss from "@morphcss/vite-plugin";
+import morphcss from "@morph-css/vite-plugin";
 
 export default defineConfig({
   plugins: [
@@ -51,7 +51,7 @@ export default defineConfig({
 Define your styles right inside your components:
 
 ```tsx
-import { css } from "morphcss";
+import { css } from "@morph-css/core";
 
 // 1. Fully static extraction
 const buttonClass = css({
