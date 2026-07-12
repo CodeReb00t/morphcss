@@ -42,12 +42,12 @@ importers:
 
   packages/vite-plugin-morphcss:
     dependencies:
-      '@morphcss/node':
-        specifier: workspace:*
-        version: link:../../crates/morphcss_node
-      morphcss:
+      '@morph-css/core':
         specifier: workspace:*
         version: link:../morphcss
+      '@morph-css/node':
+        specifier: workspace:*
+        version: link:../../crates/morphcss_node
     devDependencies:
       '@types/node':
         specifier: ^26.1.1

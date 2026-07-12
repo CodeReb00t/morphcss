@@ -1,5 +1,5 @@
 {
-  "name": "@morphcss/vite-plugin",
+  "name": "@morph-css/vite-plugin",
   "version": "0.2.0",
   "description": "Vite plugin for MorphCSS",
   "author": "Devansh Gupta",
@@ -29,8 +29,8 @@
     "dev": "tsup --watch"
   },
   "dependencies": {
-    "morphcss": "workspace:*",
-    "@morphcss/node": "workspace:*"
+    "@morph-css/core": "workspace:*",
+    "@morph-css/node": "workspace:*"
   },
   "peerDependencies": {
     "vite": "^5.0.0"

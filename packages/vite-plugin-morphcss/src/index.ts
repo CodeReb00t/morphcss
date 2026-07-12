@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 
-import { MorphCompiler } from "@morphcss/node";
+import { MorphCompiler } from "@morph-css/node";
 import type {
   Plugin,
   ResolvedConfig,

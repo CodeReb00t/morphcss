@@ -75,10 +75,10 @@ function requireNative() {
         loadErrors.push(e)
       }
       try {
-        const binding = require('@morphcss/node-android-arm64')
-        const bindingPackageVersion = require('@morphcss/node-android-arm64/package.json').version
-        if (bindingPackageVersion !== '0.1.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
-          throw new Error(`Native binding package version mismatch, expected 0.1.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
+        const binding = require('@morph-css/node-android-arm64')
+        const bindingPackageVersion = require('@morph-css/node-android-arm64/package.json').version
+        if (bindingPackageVersion !== '0.2.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
+          throw new Error(`Native binding package version mismatch, expected 0.2.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
         }
         return binding
       } catch (e) {
@@ -91,10 +91,10 @@ function requireNative() {
         loadErrors.push(e)
       }
       try {
-        const binding = require('@morphcss/node-android-arm-eabi')
-        const bindingPackageVersion = require('@morphcss/node-android-arm-eabi/package.json').version
-        if (bindingPackageVersion !== '0.1.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
-          throw new Error(`Native binding package version mismatch, expected 0.1.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
+        const binding = require('@morph-css/node-android-arm-eabi')
+        const bindingPackageVersion = require('@morph-css/node-android-arm-eabi/package.json').version
+        if (bindingPackageVersion !== '0.2.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
+          throw new Error(`Native binding package version mismatch, expected 0.2.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
         }
         return binding
       } catch (e) {
@@ -112,10 +112,10 @@ function requireNative() {
         loadErrors.push(e)
       }
       try {
-        const binding = require('@morphcss/node-win32-x64-gnu')
-        const bindingPackageVersion = require('@morphcss/node-win32-x64-gnu/package.json').version
-        if (bindingPackageVersion !== '0.1.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
-          throw new Error(`Native binding package version mismatch, expected 0.1.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
+        const binding = require('@morph-css/node-win32-x64-gnu')
+        const bindingPackageVersion = require('@morph-css/node-win32-x64-gnu/package.json').version
+        if (bindingPackageVersion !== '0.2.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
+          throw new Error(`Native binding package version mismatch, expected 0.2.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
         }
         return binding
       } catch (e) {
@@ -128,10 +128,10 @@ function requireNative() {
         loadErrors.push(e)
       }
       try {
-        const binding = require('@morphcss/node-win32-x64-msvc')
-        const bindingPackageVersion = require('@morphcss/node-win32-x64-msvc/package.json').version
-        if (bindingPackageVersion !== '0.1.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
-          throw new Error(`Native binding package version mismatch, expected 0.1.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
+        const binding = require('@morph-css/node-win32-x64-msvc')
+        const bindingPackageVersion = require('@morph-css/node-win32-x64-msvc/package.json').version
+        if (bindingPackageVersion !== '0.2.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
+          throw new Error(`Native binding package version mismatch, expected 0.2.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
         }
         return binding
       } catch (e) {
@@ -145,10 +145,10 @@ function requireNative() {
         loadErrors.push(e)
       }
       try {
-        const binding = require('@morphcss/node-win32-ia32-msvc')
-        const bindingPackageVersion = require('@morphcss/node-win32-ia32-msvc/package.json').version
-        if (bindingPackageVersion !== '0.1.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
-          throw new Error(`Native binding package version mismatch, expected 0.1.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
+        const binding = require('@morph-css/node-win32-ia32-msvc')
+        const bindingPackageVersion = require('@morph-css/node-win32-ia32-msvc/package.json').version
+        if (bindingPackageVersion !== '0.2.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
+          throw new Error(`Native binding package version mismatch, expected 0.2.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
         }
         return binding
       } catch (e) {
@@ -161,10 +161,10 @@ function requireNative() {
         loadErrors.push(e)
       }
       try {
-        const binding = require('@morphcss/node-win32-arm64-msvc')
-        const bindingPackageVersion = require('@morphcss/node-win32-arm64-msvc/package.json').version
-        if (bindingPackageVersion !== '0.1.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
-          throw new Error(`Native binding package version mismatch, expected 0.1.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
+        const binding = require('@morph-css/node-win32-arm64-msvc')
+        const bindingPackageVersion = require('@morph-css/node-win32-arm64-msvc/package.json').version
+        if (bindingPackageVersion !== '0.2.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
+          throw new Error(`Native binding package version mismatch, expected 0.2.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
         }
         return binding
       } catch (e) {
@@ -180,10 +180,10 @@ function requireNative() {
       loadErrors.push(e)
     }
     try {
-      const binding = require('@morphcss/node-darwin-universal')
-      const bindingPackageVersion = require('@morphcss/node-darwin-universal/package.json').version
-      if (bindingPackageVersion !== '0.1.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
-        throw new Error(`Native binding package version mismatch, expected 0.1.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
+      const binding = require('@morph-css/node-darwin-universal')
+      const bindingPackageVersion = require('@morph-css/node-darwin-universal/package.json').version
+      if (bindingPackageVersion !== '0.2.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
+        throw new Error(`Native binding package version mismatch, expected 0.2.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
       }
       return binding
     } catch (e) {
@@ -196,10 +196,10 @@ function requireNative() {
         loadErrors.push(e)
       }
       try {
-        const binding = require('@morphcss/node-darwin-x64')
-        const bindingPackageVersion = require('@morphcss/node-darwin-x64/package.json').version
-        if (bindingPackageVersion !== '0.1.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
-          throw new Error(`Native binding package version mismatch, expected 0.1.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
+        const binding = require('@morph-css/node-darwin-x64')
+        const bindingPackageVersion = require('@morph-css/node-darwin-x64/package.json').version
+        if (bindingPackageVersion !== '0.2.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
+          throw new Error(`Native binding package version mismatch, expected 0.2.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
         }
         return binding
       } catch (e) {
@@ -212,10 +212,10 @@ function requireNative() {
         loadErrors.push(e)
       }
       try {
-        const binding = require('@morphcss/node-darwin-arm64')
-        const bindingPackageVersion = require('@morphcss/node-darwin-arm64/package.json').version
-        if (bindingPackageVersion !== '0.1.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
-          throw new Error(`Native binding package version mismatch, expected 0.1.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
+        const binding = require('@morph-css/node-darwin-arm64')
+        const bindingPackageVersion = require('@morph-css/node-darwin-arm64/package.json').version
+        if (bindingPackageVersion !== '0.2.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
+          throw new Error(`Native binding package version mismatch, expected 0.2.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
         }
         return binding
       } catch (e) {
@@ -232,10 +232,10 @@ function requireNative() {
         loadErrors.push(e)
       }
       try {
-        const binding = require('@morphcss/node-freebsd-x64')
-        const bindingPackageVersion = require('@morphcss/node-freebsd-x64/package.json').version
-        if (bindingPackageVersion !== '0.1.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
-          throw new Error(`Native binding package version mismatch, expected 0.1.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
+        const binding = require('@morph-css/node-freebsd-x64')
+        const bindingPackageVersion = require('@morph-css/node-freebsd-x64/package.json').version
+        if (bindingPackageVersion !== '0.2.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
+          throw new Error(`Native binding package version mismatch, expected 0.2.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
         }
         return binding
       } catch (e) {
@@ -248,10 +248,10 @@ function requireNative() {
         loadErrors.push(e)
       }
       try {
-        const binding = require('@morphcss/node-freebsd-arm64')
-        const bindingPackageVersion = require('@morphcss/node-freebsd-arm64/package.json').version
-        if (bindingPackageVersion !== '0.1.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
-          throw new Error(`Native binding package version mismatch, expected 0.1.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
+        const binding = require('@morph-css/node-freebsd-arm64')
+        const bindingPackageVersion = require('@morph-css/node-freebsd-arm64/package.json').version
+        if (bindingPackageVersion !== '0.2.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
+          throw new Error(`Native binding package version mismatch, expected 0.2.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
         }
         return binding
       } catch (e) {
@@ -269,10 +269,10 @@ function requireNative() {
           loadErrors.push(e)
         }
         try {
-          const binding = require('@morphcss/node-linux-x64-musl')
-          const bindingPackageVersion = require('@morphcss/node-linux-x64-musl/package.json').version
-          if (bindingPackageVersion !== '0.1.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
-            throw new Error(`Native binding package version mismatch, expected 0.1.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
+          const binding = require('@morph-css/node-linux-x64-musl')
+          const bindingPackageVersion = require('@morph-css/node-linux-x64-musl/package.json').version
+          if (bindingPackageVersion !== '0.2.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
+            throw new Error(`Native binding package version mismatch, expected 0.2.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
           }
           return binding
         } catch (e) {
@@ -285,10 +285,10 @@ function requireNative() {
           loadErrors.push(e)
         }
         try {
-          const binding = require('@morphcss/node-linux-x64-gnu')
-          const bindingPackageVersion = require('@morphcss/node-linux-x64-gnu/package.json').version
-          if (bindingPackageVersion !== '0.1.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
-            throw new Error(`Native binding package version mismatch, expected 0.1.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
+          const binding = require('@morph-css/node-linux-x64-gnu')
+          const bindingPackageVersion = require('@morph-css/node-linux-x64-gnu/package.json').version
+          if (bindingPackageVersion !== '0.2.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
+            throw new Error(`Native binding package version mismatch, expected 0.2.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
           }
           return binding
         } catch (e) {
@@ -303,10 +303,10 @@ function requireNative() {
           loadErrors.push(e)
         }
         try {
-          const binding = require('@morphcss/node-linux-arm64-musl')
-          const bindingPackageVersion = require('@morphcss/node-linux-arm64-musl/package.json').version
-          if (bindingPackageVersion !== '0.1.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
-            throw new Error(`Native binding package version mismatch, expected 0.1.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
+          const binding = require('@morph-css/node-linux-arm64-musl')
+          const bindingPackageVersion = require('@morph-css/node-linux-arm64-musl/package.json').version
+          if (bindingPackageVersion !== '0.2.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
+            throw new Error(`Native binding package version mismatch, expected 0.2.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
           }
           return binding
         } catch (e) {
@@ -319,10 +319,10 @@ function requireNative() {
           loadErrors.push(e)
         }
         try {
-          const binding = require('@morphcss/node-linux-arm64-gnu')
-          const bindingPackageVersion = require('@morphcss/node-linux-arm64-gnu/package.json').version
-          if (bindingPackageVersion !== '0.1.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
-            throw new Error(`Native binding package version mismatch, expected 0.1.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
+          const binding = require('@morph-css/node-linux-arm64-gnu')
+          const bindingPackageVersion = require('@morph-css/node-linux-arm64-gnu/package.json').version
+          if (bindingPackageVersion !== '0.2.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
+            throw new Error(`Native binding package version mismatch, expected 0.2.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
           }
           return binding
         } catch (e) {
@@ -337,10 +337,10 @@ function requireNative() {
           loadErrors.push(e)
         }
         try {
-          const binding = require('@morphcss/node-linux-arm-musleabihf')
-          const bindingPackageVersion = require('@morphcss/node-linux-arm-musleabihf/package.json').version
-          if (bindingPackageVersion !== '0.1.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
-            throw new Error(`Native binding package version mismatch, expected 0.1.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
+          const binding = require('@morph-css/node-linux-arm-musleabihf')
+          const bindingPackageVersion = require('@morph-css/node-linux-arm-musleabihf/package.json').version
+          if (bindingPackageVersion !== '0.2.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
+            throw new Error(`Native binding package version mismatch, expected 0.2.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
           }
           return binding
         } catch (e) {
@@ -353,10 +353,10 @@ function requireNative() {
           loadErrors.push(e)
         }
         try {
-          const binding = require('@morphcss/node-linux-arm-gnueabihf')
-          const bindingPackageVersion = require('@morphcss/node-linux-arm-gnueabihf/package.json').version
-          if (bindingPackageVersion !== '0.1.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
-            throw new Error(`Native binding package version mismatch, expected 0.1.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
+          const binding = require('@morph-css/node-linux-arm-gnueabihf')
+          const bindingPackageVersion = require('@morph-css/node-linux-arm-gnueabihf/package.json').version
+          if (bindingPackageVersion !== '0.2.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
+            throw new Error(`Native binding package version mismatch, expected 0.2.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
           }
           return binding
         } catch (e) {
@@ -371,10 +371,10 @@ function requireNative() {
           loadErrors.push(e)
         }
         try {
-          const binding = require('@morphcss/node-linux-loong64-musl')
-          const bindingPackageVersion = require('@morphcss/node-linux-loong64-musl/package.json').version
-          if (bindingPackageVersion !== '0.1.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
-            throw new Error(`Native binding package version mismatch, expected 0.1.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
+          const binding = require('@morph-css/node-linux-loong64-musl')
+          const bindingPackageVersion = require('@morph-css/node-linux-loong64-musl/package.json').version
+          if (bindingPackageVersion !== '0.2.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
+            throw new Error(`Native binding package version mismatch, expected 0.2.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
           }
           return binding
         } catch (e) {
@@ -387,10 +387,10 @@ function requireNative() {
           loadErrors.push(e)
         }
         try {
-          const binding = require('@morphcss/node-linux-loong64-gnu')
-          const bindingPackageVersion = require('@morphcss/node-linux-loong64-gnu/package.json').version
-          if (bindingPackageVersion !== '0.1.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
-            throw new Error(`Native binding package version mismatch, expected 0.1.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
+          const binding = require('@morph-css/node-linux-loong64-gnu')
+          const bindingPackageVersion = require('@morph-css/node-linux-loong64-gnu/package.json').version
+          if (bindingPackageVersion !== '0.2.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
+            throw new Error(`Native binding package version mismatch, expected 0.2.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
           }
           return binding
         } catch (e) {
@@ -405,10 +405,10 @@ function requireNative() {
           loadErrors.push(e)
         }
         try {
-          const binding = require('@morphcss/node-linux-riscv64-musl')
-          const bindingPackageVersion = require('@morphcss/node-linux-riscv64-musl/package.json').version
-          if (bindingPackageVersion !== '0.1.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
-            throw new Error(`Native binding package version mismatch, expected 0.1.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
+          const binding = require('@morph-css/node-linux-riscv64-musl')
+          const bindingPackageVersion = require('@morph-css/node-linux-riscv64-musl/package.json').version
+          if (bindingPackageVersion !== '0.2.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
+            throw new Error(`Native binding package version mismatch, expected 0.2.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
           }
           return binding
         } catch (e) {
@@ -421,10 +421,10 @@ function requireNative() {
           loadErrors.push(e)
         }
         try {
-          const binding = require('@morphcss/node-linux-riscv64-gnu')
-          const bindingPackageVersion = require('@morphcss/node-linux-riscv64-gnu/package.json').version
-          if (bindingPackageVersion !== '0.1.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
-            throw new Error(`Native binding package version mismatch, expected 0.1.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
+          const binding = require('@morph-css/node-linux-riscv64-gnu')
+          const bindingPackageVersion = require('@morph-css/node-linux-riscv64-gnu/package.json').version
+          if (bindingPackageVersion !== '0.2.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
+            throw new Error(`Native binding package version mismatch, expected 0.2.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
           }
           return binding
         } catch (e) {
@@ -438,10 +438,10 @@ function requireNative() {
         loadErrors.push(e)
       }
       try {
-        const binding = require('@morphcss/node-linux-ppc64-gnu')
-        const bindingPackageVersion = require('@morphcss/node-linux-ppc64-gnu/package.json').version
-        if (bindingPackageVersion !== '0.1.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
-          throw new Error(`Native binding package version mismatch, expected 0.1.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
+        const binding = require('@morph-css/node-linux-ppc64-gnu')
+        const bindingPackageVersion = require('@morph-css/node-linux-ppc64-gnu/package.json').version
+        if (bindingPackageVersion !== '0.2.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
+          throw new Error(`Native binding package version mismatch, expected 0.2.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
         }
         return binding
       } catch (e) {
@@ -454,10 +454,10 @@ function requireNative() {
         loadErrors.push(e)
       }
       try {
-        const binding = require('@morphcss/node-linux-s390x-gnu')
-        const bindingPackageVersion = require('@morphcss/node-linux-s390x-gnu/package.json').version
-        if (bindingPackageVersion !== '0.1.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
-          throw new Error(`Native binding package version mismatch, expected 0.1.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
+        const binding = require('@morph-css/node-linux-s390x-gnu')
+        const bindingPackageVersion = require('@morph-css/node-linux-s390x-gnu/package.json').version
+        if (bindingPackageVersion !== '0.2.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
+          throw new Error(`Native binding package version mismatch, expected 0.2.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
         }
         return binding
       } catch (e) {
@@ -474,10 +474,10 @@ function requireNative() {
         loadErrors.push(e)
       }
       try {
-        const binding = require('@morphcss/node-openharmony-arm64')
-        const bindingPackageVersion = require('@morphcss/node-openharmony-arm64/package.json').version
-        if (bindingPackageVersion !== '0.1.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
-          throw new Error(`Native binding package version mismatch, expected 0.1.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
+        const binding = require('@morph-css/node-openharmony-arm64')
+        const bindingPackageVersion = require('@morph-css/node-openharmony-arm64/package.json').version
+        if (bindingPackageVersion !== '0.2.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
+          throw new Error(`Native binding package version mismatch, expected 0.2.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
         }
         return binding
       } catch (e) {
@@ -490,10 +490,10 @@ function requireNative() {
         loadErrors.push(e)
       }
       try {
-        const binding = require('@morphcss/node-openharmony-x64')
-        const bindingPackageVersion = require('@morphcss/node-openharmony-x64/package.json').version
-        if (bindingPackageVersion !== '0.1.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
-          throw new Error(`Native binding package version mismatch, expected 0.1.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
+        const binding = require('@morph-css/node-openharmony-x64')
+        const bindingPackageVersion = require('@morph-css/node-openharmony-x64/package.json').version
+        if (bindingPackageVersion !== '0.2.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
+          throw new Error(`Native binding package version mismatch, expected 0.2.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
         }
         return binding
       } catch (e) {
@@ -506,10 +506,10 @@ function requireNative() {
         loadErrors.push(e)
       }
       try {
-        const binding = require('@morphcss/node-openharmony-arm')
-        const bindingPackageVersion = require('@morphcss/node-openharmony-arm/package.json').version
-        if (bindingPackageVersion !== '0.1.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
-          throw new Error(`Native binding package version mismatch, expected 0.1.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
+        const binding = require('@morph-css/node-openharmony-arm')
+        const bindingPackageVersion = require('@morph-css/node-openharmony-arm/package.json').version
+        if (bindingPackageVersion !== '0.2.0' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
+          throw new Error(`Native binding package version mismatch, expected 0.2.0 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
         }
         return binding
       } catch (e) {
@@ -548,7 +548,7 @@ if (!nativeBinding || forceWasi) {
   }
   if (!nativeBinding || forceWasi) {
     try {
-      wasiBinding = require('@morphcss/node-wasm32-wasi')
+      wasiBinding = require('@morph-css/node-wasm32-wasi')
       nativeBinding = wasiBinding
     } catch (err) {
       if (forceWasi) {

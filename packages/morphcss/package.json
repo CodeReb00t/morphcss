@@ -1,5 +1,5 @@
 {
-  "name": "morphcss",
+  "name": "@morph-css/core",
   "version": "0.2.0",
   "description": "Zero-runtime atomic CSS-in-JS",
   "author": "Devansh Gupta",
