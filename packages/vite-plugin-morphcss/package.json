@@ -11,7 +11,7 @@
   },
   "publishConfig": {
     "access": "public",
-    "provenance": true
+    "provenance": false
   },
   "type": "module",
   "exports": {
@@ -29,8 +29,8 @@
     "dev": "tsup --watch"
   },
   "dependencies": {
-    "@morph-css/core": "workspace:*",
-    "@morph-css/node": "workspace:*"
+    "@morph-css/core": "^0.3.0",
+    "@morph-css/node": "^0.3.0"
   },
   "peerDependencies": {
     "vite": "^5.0.0"

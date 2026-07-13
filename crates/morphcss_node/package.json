@@ -10,7 +10,7 @@
   },
   "publishConfig": {
     "access": "public",
-    "provenance": true
+    "provenance": false
   },
   "main": "index.js",
   "types": "index.d.ts",
