@@ -4,3 +4,6 @@ packages:
   - "packages/examples/*"
 allowBuilds:
   esbuild: true
+minimumReleaseAgeExclude:
+  - '@morph-css/core@0.3.0'
+  - '@morph-css/node@0.3.0'

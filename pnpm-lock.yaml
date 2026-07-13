@@ -43,11 +43,11 @@ importers:
   packages/vite-plugin-morphcss:
     dependencies:
       '@morph-css/core':
-        specifier: workspace:*
-        version: link:../morphcss
+        specifier: ^0.3.0
+        version: 0.3.0
       '@morph-css/node':
-        specifier: workspace:*
-        version: link:../../crates/morphcss_node
+        specifier: ^0.3.0
+        version: 0.3.0
     devDependencies:
       '@types/node':
         specifier: ^26.1.1
@@ -587,6 +587,12 @@ packages:
 
   '@manypkg/get-packages@1.1.3':
     resolution: {integrity: sha512-fo+QhuU3qE/2TQMQmbVMqaQ6EWbMhi4ABWP+O4AM1NqPBuy0OrApV5LO6BrrgnhtAHS2NH6RrVk9OL181tTi8A==}
+
+  '@morph-css/core@0.3.0':
+    resolution: {integrity: sha512-X8dk+Qzov+ZjqizEEgtxPQgdtU46qwEKjoWenNzElQ6bdo0mN+V2Y7HOZcQ2Ur01qCYHuQDzgScySjYGdPyzbw==}
+
+  '@morph-css/node@0.3.0':
+    resolution: {integrity: sha512-/OCcViDp5jt5RyToSjIZYw5V0bXcreVKlUvmOZAEfmJA+QLkaIxKHYcT+aD/TXKaE70mHIpOinpFbMfX4HWm9g==}
 
   '@napi-rs/cli@3.7.2':
     resolution: {integrity: sha512-shDW0Td/XZQpP04Yy+OsMt1ILMKGGkoLcy1zVAsSAK0fLfWm0Upgkmfs/NOV2ZhMQwkgpR3ZEdyHmTwgrUDQuA==}
@@ -2287,6 +2293,12 @@ snapshots:
       fs-extra: 8.1.0
       globby: 11.1.0
       read-yaml-file: 1.1.0
+
+  '@morph-css/core@0.3.0':
+    dependencies:
+      csstype: 3.2.3
+
+  '@morph-css/node@0.3.0': {}
 
   '@napi-rs/cli@3.7.2(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.2)(@types/node@26.1.1)':
     dependencies:
