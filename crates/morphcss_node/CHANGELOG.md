@@ -1,5 +1,11 @@
 # @morphcss/node
 
+## 0.3.0
+
+### Minor Changes
+
+- Switch to CSS Marker Architecture for robust SSR and HMR support.
+
 ## 0.2.1
 
 ### Patch Changes

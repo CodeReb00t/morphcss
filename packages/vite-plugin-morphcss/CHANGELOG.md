@@ -1,5 +1,17 @@
 # @morphcss/vite-plugin
 
+## 0.3.0
+
+### Minor Changes
+
+- Switch to CSS Marker Architecture for robust SSR and HMR support.
+
+### Patch Changes
+
+- Updated dependencies
+  - @morph-css/core@0.3.0
+  - @morph-css/node@0.3.0
+
 ## 0.2.2
 
 ### Patch Changes
