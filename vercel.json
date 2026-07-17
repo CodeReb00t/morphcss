@@ -1,0 +1,5 @@
+{
+  "buildCommand": "npm run build -w tanstack-start-example",
+  "outputDirectory": "examples/tanstack-start-example/dist",
+  "installCommand": "npm install"
+}
