@@ -84,14 +84,14 @@ jobs:
         with:
           path: artifacts
 
-      - name: Move Artifacts
-        run: |
-          cp artifacts/bindings-*/*.node crates/morphcss_node/
-          ls -la crates/morphcss_node/
+      - name: Distribute Native Bindings
+        run: node_modules/.bin/napi artifacts --cwd crates/morphcss_node --build-output-dir artifacts
+
+      - name: Verify Bindings Distributed
+        run: ls -la crates/morphcss_node/npm/*/
 
       - name: Prepare Native Packages
-        run: npm run prepublishOnly
-        working-directory: crates/morphcss_node
+        run: node_modules/.bin/napi prepublish -t npm --cwd crates/morphcss_node
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
