@@ -12,13 +12,14 @@ import type { Plugin, ResolvedConfig, ViteDevServer } from "vite";
  * In dev: resolved to a virtual module that returns the current generated CSS.
  * In prod: CSS is appended to the output CSS bundle — this import becomes a no-op stub.
  */
-const VIRTUAL_CSS_ID = "morphcss/css";
-const RESOLVED_CSS_ID = "\0virtual:morphcss/css";
+const VIRTUAL_CSS_ID = "@morph-css/kit/css";
+const RESOLVED_CSS_ID = "\0virtual:morphcss.css";
 
 function shouldTransform(id: string): boolean {
-  if (!/\.[jt]sx?$/.test(id)) return false;
-  if (id.endsWith(".d.ts")) return false;
-  if (id.includes("node_modules")) return false;
+  const [filePath] = id.split("?");
+  if (!/\.[jt]sx?$/.test(filePath)) return false;
+  if (filePath.endsWith(".d.ts")) return false;
+  if (filePath.includes("node_modules")) return false;
   if (id.startsWith("\0")) return false;
   return true;
 }
@@ -65,29 +66,14 @@ export function morphcss(): Plugin {
     // virtual module tracked by Vite's module graph.
 
     resolveId(id) {
-      if (id === VIRTUAL_CSS_ID) return RESOLVED_CSS_ID;
+      if (id === VIRTUAL_CSS_ID || id.startsWith(VIRTUAL_CSS_ID + "?")) {
+        return RESOLVED_CSS_ID + (id.includes("?") ? id.slice(id.indexOf("?")) : "");
+      }
     },
 
     load(id) {
-      if (id === RESOLVED_CSS_ID) {
-        // Return CSS as a JS string injection so Vite can HMR it as a module.
-        // We emit it as a CSS string that gets injected into a <style> tag by
-        // Vite's own CSS handling when imported as a side-effect.
-        const css = compiler.generateCss();
-        return `
-const css = ${JSON.stringify(css)};
-let el = document.getElementById('__morphcss');
-if (!el) {
-  el = document.createElement('style');
-  el.id = '__morphcss';
-  document.head.appendChild(el);
-}
-el.textContent = css;
-
-if (import.meta.hot) {
-  import.meta.hot.accept();
-}
-`;
+      if (id === RESOLVED_CSS_ID || id.startsWith(RESOLVED_CSS_ID + "?")) {
+        return compiler.generateCss();
       }
     },
 
@@ -98,11 +84,20 @@ if (import.meta.hot) {
     transform(code, id) {
       if (!shouldTransform(id)) return null;
 
-      const result = compiler.compile(code, id);
-      return {
-        code: result.code,
-        map: null,
-      };
+      try {
+        const cleanId = id.split('?')[0];
+        const result = compiler.compile(code, cleanId);
+        return {
+          code: result.code,
+          map: null,
+        };
+      } catch (err) {
+        console.error(`[morphcss] Failed to parse ${id}`);
+        // If a file fails to parse, it might be due to intermediate transformations
+        // (e.g., tsr-split) that generate non-standard code. We just return null
+        // and let other plugins handle it, rather than breaking the build.
+        return null;
+      }
     },
 
     // ─── HMR ─────────────────────────────────────────────────────────────

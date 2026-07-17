@@ -19,6 +19,9 @@ export function resetCompiler(): void {
   _compiler = null;
 }
 
+import fs from "fs";
+import path from "path";
+
 /**
  * Webpack loader that transforms css() call expressions at build time.
  *
@@ -35,6 +38,22 @@ export default function morphLoader(
   const callback = this.async();
   try {
     const result = getCompiler().compile(source, this.resourcePath);
+    
+    // Write CSS to cache file so Next.js can resolve and bundle it normally
+    const cacheDir = path.resolve(process.cwd(), 'node_modules/.cache/morphcss');
+    const cacheFile = path.join(cacheDir, 'morph.css');
+    
+    if (!fs.existsSync(cacheDir)) {
+      fs.mkdirSync(cacheDir, { recursive: true });
+    }
+    
+    const newCss = getCompiler().generateCss();
+    const currentCss = fs.existsSync(cacheFile) ? fs.readFileSync(cacheFile, 'utf8') : '';
+    
+    if (newCss !== currentCss) {
+      fs.writeFileSync(cacheFile, newCss);
+    }
+    
     callback(null, result.code);
   } catch (err) {
     callback(err instanceof Error ? err : new Error(String(err)));
