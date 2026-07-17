@@ -85,7 +85,7 @@ jobs:
           path: artifacts
 
       - name: Distribute Native Bindings
-        run: node_modules/.bin/napi artifacts --cwd crates/morphcss_node --build-output-dir artifacts
+        run: node_modules/.bin/napi artifacts --cwd crates/morphcss_node --build-output-dir $(pwd)/artifacts
 
       - name: Verify Bindings Distributed
         run: ls -la crates/morphcss_node/npm/*/
