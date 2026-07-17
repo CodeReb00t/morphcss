@@ -35,6 +35,72 @@ impl<'b> CssExtractor<'b> {
             source,
         }
     }
+
+    fn extract_object_properties<'a>(
+        &mut self,
+        obj: &oxc_ast::ast::ObjectExpression<'a>,
+        condition: Option<String>,
+        properties: &mut Vec<CssProperty>,
+        dynamic_variables: &mut Vec<(String, String)>,
+        dynamic_index: &mut usize,
+    ) {
+        for prop in &obj.properties {
+            if let ObjectPropertyKind::ObjectProperty(p) = prop {
+                let key_name = match &p.key {
+                    PropertyKey::StaticIdentifier(id) => Some(id.name.to_string()),
+                    PropertyKey::StringLiteral(lit) => Some(lit.value.to_string()),
+                    _ => None,
+                };
+
+                if let Some(k) = key_name {
+                    match &p.value {
+                        Expression::StringLiteral(lit) => {
+                            let mut css_prop = CssProperty::new(k, lit.value.to_string());
+                            if let Some(cond) = &condition {
+                                css_prop = css_prop.with_condition(cond.clone());
+                            }
+                            properties.push(css_prop);
+                        }
+                        Expression::NumericLiteral(lit) => {
+                            let mut css_prop = CssProperty::new(k, lit.value.to_string());
+                            if let Some(cond) = &condition {
+                                css_prop = css_prop.with_condition(cond.clone());
+                            }
+                            properties.push(css_prop);
+                        }
+                        Expression::ObjectExpression(inner_obj) => {
+                            let new_cond = if let Some(ref existing) = condition {
+                                format!("{} {}", existing, k) // Combine conditions if deeply nested, though usually just 'k'
+                            } else {
+                                k.clone()
+                            };
+                            self.extract_object_properties(
+                                inner_obj,
+                                Some(new_cond),
+                                properties,
+                                dynamic_variables,
+                                dynamic_index,
+                            );
+                        }
+                        _ => {
+                            let var_name = format!("--{}", *dynamic_index);
+                            *dynamic_index += 1;
+
+                            let span = p.value.span();
+                            let val_str = &self.source[span.start as usize..span.end as usize];
+
+                            let mut css_prop = CssProperty::new(k, format!("var({})", var_name));
+                            if let Some(cond) = &condition {
+                                css_prop = css_prop.with_condition(cond.clone());
+                            }
+                            properties.push(css_prop);
+                            dynamic_variables.push((var_name, val_str.to_string()));
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 impl<'a, 'b> Visit<'a> for CssExtractor<'b> {
@@ -73,43 +139,14 @@ impl<'a, 'b> Visit<'a> for CssExtractor<'b> {
                         let mut dynamic_variables = Vec::new();
                         let mut dynamic_index = 0;
 
-                        for prop in &obj.properties {
-                            if let ObjectPropertyKind::ObjectProperty(p) = prop {
-                                let key_name = match &p.key {
-                                    PropertyKey::StaticIdentifier(id) => Some(id.name.to_string()),
-                                    PropertyKey::StringLiteral(lit) => Some(lit.value.to_string()),
-                                    _ => None,
-                                };
+                        self.extract_object_properties(
+                            obj,
+                            None,
+                            &mut properties,
+                            &mut dynamic_variables,
+                            &mut dynamic_index,
+                        );
 
-                                if let Some(k) = key_name {
-                                    match &p.value {
-                                        Expression::StringLiteral(lit) => {
-                                            properties
-                                                .push(CssProperty::new(k, lit.value.to_string()));
-                                        }
-                                        Expression::NumericLiteral(lit) => {
-                                            properties
-                                                .push(CssProperty::new(k, lit.value.to_string()));
-                                        }
-                                        _ => {
-                                            // Dynamic value
-                                            let var_name = format!("--{}", dynamic_index);
-                                            dynamic_index += 1;
-
-                                            let span = p.value.span();
-                                            let val_str = &self.source
-                                                [span.start as usize..span.end as usize];
-
-                                            properties.push(CssProperty::new(
-                                                k,
-                                                format!("var({})", var_name),
-                                            ));
-                                            dynamic_variables.push((var_name, val_str.to_string()));
-                                        }
-                                    }
-                                }
-                            }
-                        }
                         if !properties.is_empty() {
                             self.css_calls.push(ExtractedCssCall {
                                 span: expr.span,
@@ -206,5 +243,33 @@ mod tests {
         assert_eq!(call.dynamic_variables.len(), 1);
         assert_eq!(call.dynamic_variables[0].0, "--0");
         assert_eq!(call.dynamic_variables[0].1, "color");
+    }
+
+    #[test]
+    fn test_extract_nested_objects() {
+        let source = r#"
+            export const button = css({
+                background: "red",
+                "&:hover": {
+                    background: "blue"
+                }
+            });
+        "#;
+
+        let source_type = SourceType::default().with_typescript(true).with_jsx(true);
+        let result = extract_css_from_source(source, source_type).unwrap();
+
+        assert_eq!(result.css_calls.len(), 1);
+        let call = &result.css_calls[0];
+
+        assert_eq!(call.properties.len(), 2);
+        
+        assert_eq!(call.properties[0].property, "background");
+        assert_eq!(call.properties[0].value, "red");
+        assert_eq!(call.properties[0].condition, None);
+
+        assert_eq!(call.properties[1].property, "background");
+        assert_eq!(call.properties[1].value, "blue");
+        assert_eq!(call.properties[1].condition.as_deref(), Some("&:hover"));
     }
 }

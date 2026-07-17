@@ -1,7 +1,7 @@
 {
-  "name": "@morph-css/core",
-  "version": "0.3.0",
-  "description": "Zero-runtime atomic CSS-in-JS",
+  "name": "morphcss",
+  "version": "0.4.0",
+  "description": "Zero-runtime atomic CSS-in-JS for Vite and Next.js",
   "author": "Devansh Gupta",
   "license": "MIT",
   "repository": {
@@ -19,6 +19,21 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
+    },
+    "./css": {
+      "types": "./dist/css-import.d.ts",
+      "import": "./dist/css-import.js",
+      "require": "./dist/css-import.cjs"
+    },
+    "./vite": {
+      "types": "./dist/vite.d.ts",
+      "import": "./dist/vite.js",
+      "require": "./dist/vite.cjs"
+    },
+    "./next": {
+      "types": "./dist/next.d.ts",
+      "import": "./dist/next.js",
+      "require": "./dist/next.cjs"
     }
   },
   "main": "./dist/index.cjs",
@@ -29,10 +44,25 @@
     "dev": "tsup --watch"
   },
   "dependencies": {
+    "@morph-css/node": "^0.3.0",
     "csstype": "^3.1.3"
   },
+  "peerDependencies": {
+    "vite": "^5.0.0",
+    "next": "^14.0.0"
+  },
+  "peerDependenciesMeta": {
+    "vite": {
+      "optional": true
+    },
+    "next": {
+      "optional": true
+    }
+  },
   "devDependencies": {
+    "@types/node": "^26.1.1",
     "tsup": "^8.0.2",
-    "typescript": "^5.4.5"
+    "typescript": "^5.4.5",
+    "vite": "^5.2.0"
   }
 }

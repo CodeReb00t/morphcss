@@ -40,7 +40,10 @@ impl AtomicCache {
 
         let rule = match &prop.condition {
             Some(cond) => {
-                if cond.starts_with(':') {
+                if cond.contains('&') {
+                    let selector = cond.replace("&", &format!(".{}", hash));
+                    format!("{} {{ {}: {}; }}", selector, prop.property, prop.value)
+                } else if cond.starts_with(':') {
                     format!(".{}{} {{ {}: {}; }}", hash, cond, prop.property, prop.value)
                 } else if cond.starts_with('@') {
                     format!(
@@ -140,5 +143,19 @@ mod tests {
         cache.invalidate_file("file2.ts");
         let css3 = cache.generate_css();
         assert!(css3.is_empty(), "All active rules should be removed");
+    }
+
+    #[test]
+    fn test_atomic_cache_nested_selectors() {
+        let cache = AtomicCache::new();
+
+        let hash1 = cache.process_property(CssProperty::new("background", "red").with_condition("&:hover"));
+        let hash2 = cache.process_property(CssProperty::new("color", "blue").with_condition("& h1"));
+
+        cache.register_file("file1.ts", vec![hash1.clone(), hash2.clone()]);
+
+        let css = cache.generate_css();
+        assert!(css.contains(&format!(".{}:hover {{ background: red; }}", hash1)));
+        assert!(css.contains(&format!(".{} h1 {{ color: blue; }}", hash2)));
     }
 }
