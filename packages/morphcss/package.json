@@ -1,6 +1,6 @@
 {
   "name": "@morph-css/kit",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "description": "Zero-runtime atomic CSS-in-JS for Vite and Next.js",
   "author": "Devansh Gupta",
   "license": "MIT",
@@ -13,6 +13,9 @@
     "access": "public",
     "provenance": false
   },
+  "files": [
+    "dist"
+  ],
   "type": "module",
   "exports": {
     ".": {
@@ -42,7 +45,8 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "build": "tsup",
-    "dev": "tsup --watch"
+    "dev": "tsup --watch",
+    "prepublishOnly": "tsup"
   },
   "dependencies": {
     "@morph-css/node": "^0.4.3",
