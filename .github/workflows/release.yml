@@ -89,6 +89,23 @@ jobs:
           cp artifacts/bindings-*/*.node crates/morphcss_node/
           ls -la crates/morphcss_node/
 
+      - name: Prepare Native Packages
+        run: npm run prepublishOnly
+        working-directory: crates/morphcss_node
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish Native Platform Packages
+        run: |
+          for dir in crates/morphcss_node/npm/*/; do
+            if [ -f "$dir/package.json" ]; then
+              echo "Publishing $dir..."
+              npm publish "$dir" --access public || echo "Already published, skipping."
+            fi
+          done
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
       - name: Build JS Packages
         run: npm run build -w @morph-css/kit
 
