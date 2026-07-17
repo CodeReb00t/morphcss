@@ -8,16 +8,69 @@ on:
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
-  release:
-    name: Release
+  build:
+    name: Build - ${{ matrix.settings.os }} - ${{ matrix.settings.target }}
+    runs-on: ${{ matrix.settings.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        settings:
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+          - os: macos-latest
+            target: x86_64-apple-darwin
+          - os: macos-latest
+            target: aarch64-apple-darwin
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 11
+          
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.settings.target }}
+
+      - name: Cache Cargo
+        uses: Swatinem/rust-cache@v2
+        with:
+          key: ${{ matrix.settings.target }}
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build Native Binding
+        run: pnpm run build --target ${{ matrix.settings.target }}
+        working-directory: crates/morphcss_node
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: bindings-${{ matrix.settings.target }}
+          path: crates/morphcss_node/*.node
+          if-no-files-found: error
+
+  publish:
+    name: Publish
+    needs: build
     runs-on: ubuntu-latest
     permissions:
-      contents: write # for creating PRs and releases
-      pull-requests: write # for changesets PR
-      id-token: write # for npm provenance
+      contents: write
+      pull-requests: write
+      id-token: write
     steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -33,17 +86,20 @@ jobs:
           cache: 'pnpm'
           registry-url: 'https://registry.npmjs.org'
 
-      - name: Install Rust
-        uses: dtolnay/rust-toolchain@stable
-
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build Rust Bindings
-        run: pnpm run build
-        working-directory: crates/morphcss_node
+      - name: Download Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
 
-      - name: Build Packages
+      - name: Move Artifacts
+        run: |
+          cp artifacts/bindings-*/*.node crates/morphcss_node/
+          ls -la crates/morphcss_node/
+
+      - name: Build JS Packages
         run: pnpm --filter "./packages/**" build
 
       - name: Create Release Pull Request or Publish
