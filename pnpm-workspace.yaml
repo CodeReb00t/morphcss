@@ -1,5 +1,6 @@
 packages:
   - "crates/*"
   - "packages/*"
+  - "examples/*"
 allowBuilds:
   esbuild: true
