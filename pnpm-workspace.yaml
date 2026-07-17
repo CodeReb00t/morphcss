@@ -10,4 +10,5 @@ allowBuilds:
   sharp: set this to true or false
   unrs-resolver: set this to true or false
 minimumReleaseAgeExclude:
-  - '@morph-css/kit@0.4.2'
+  - '@morph-css/kit@0.4.2 || 0.4.3'
+  - '@morph-css/node@0.4.3'
