@@ -1,6 +1,6 @@
 {
   "name": "@morph-css/node",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "author": "Devansh Gupta",
   "license": "MIT",
   "repository": {
@@ -15,7 +15,13 @@
   "main": "index.js",
   "types": "index.d.ts",
   "napi": {
-    "name": "morphcss-node"
+    "binaryName": "morphcss-node",
+    "targets": [
+      "x86_64-unknown-linux-gnu",
+      "x86_64-apple-darwin",
+      "aarch64-apple-darwin",
+      "x86_64-pc-windows-msvc"
+    ]
   },
   "scripts": {
     "build": "napi build --platform --release",
