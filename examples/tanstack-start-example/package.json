@@ -16,7 +16,7 @@
     "check": "biome check"
   },
   "dependencies": {
-    "@morph-css/kit": "^0.4.3",
+    "@morph-css/kit": "^0.4.4",
     "@tanstack/react-devtools": "latest",
     "@tanstack/react-router": "latest",
     "@tanstack/react-router-devtools": "latest",
