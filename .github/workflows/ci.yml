@@ -30,19 +30,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v3
-        with:
-          version: 11
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: 'pnpm'
+          cache: 'npm'
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: npm ci
       - name: Build Rust Bindings
-        run: pnpm run build
+        run: npm run build
         working-directory: crates/morphcss_node
       - name: Build Packages
-        run: pnpm --filter "./packages/**" build
+        run: npm run build -w @morph-css/kit

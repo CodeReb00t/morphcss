@@ -26,16 +26,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v3
-        with:
-          version: 11
-          
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: 'pnpm'
+          cache: 'npm'
 
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
@@ -48,10 +43,10 @@ jobs:
           key: ${{ matrix.settings.target }}
 
       - name: Install Dependencies
-        run: pnpm install --frozen-lockfile
+        run: npm ci
 
       - name: Build Native Binding
-        run: pnpm run build --target ${{ matrix.settings.target }}
+        run: npm run build --target ${{ matrix.settings.target }}
         working-directory: crates/morphcss_node
 
       - name: Upload Artifacts
@@ -74,20 +69,15 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v3
-        with:
-          version: 11
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: 'pnpm'
+          cache: 'npm'
           registry-url: 'https://registry.npmjs.org'
 
       - name: Install Dependencies
-        run: pnpm install --frozen-lockfile
+        run: npm ci
 
       - name: Download Artifacts
         uses: actions/download-artifact@v4
@@ -100,13 +90,13 @@ jobs:
           ls -la crates/morphcss_node/
 
       - name: Build JS Packages
-        run: pnpm --filter "./packages/**" build
+        run: npm run build -w @morph-css/kit
 
       - name: Create Release Pull Request or Publish
         id: changesets
         uses: changesets/action@v1
         with:
-          publish: pnpm release
+          publish: npm run release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
