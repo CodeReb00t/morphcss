@@ -1,32 +1,41 @@
 name: Release
 
+env:
+  DEBUG: napi:*
+
 on:
   push:
     branches:
       - master
 
-concurrency: ${{ github.workflow }}-${{ github.ref }}
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
-    name: Build - ${{ matrix.settings.os }} - ${{ matrix.settings.target }}
-    runs-on: ${{ matrix.settings.os }}
+    name: stable - ${{ matrix.settings.target }} - node@22
+    runs-on: ${{ matrix.settings.host }}
     strategy:
       fail-fast: false
       matrix:
         settings:
-          - os: ubuntu-20.04
-            target: x86_64-unknown-linux-gnu
-          - os: macos-latest
+          - host: macos-latest
             target: x86_64-apple-darwin
-          - os: macos-latest
-            target: aarch64-apple-darwin
-          - os: windows-latest
+            build: npm run build -- --target x86_64-apple-darwin
+          - host: windows-latest
             target: x86_64-pc-windows-msvc
+            build: npm run build -- --target x86_64-pc-windows-msvc
+          - host: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            build: npm run build -- --target x86_64-unknown-linux-gnu --use-napi-cross
+          - host: macos-latest
+            target: aarch64-apple-darwin
+            build: npm run build -- --target aarch64-apple-darwin
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Setup node
         uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -37,19 +46,19 @@ jobs:
         with:
           targets: ${{ matrix.settings.target }}
 
-      - name: Cache Cargo
+      - name: Cache cargo
         uses: Swatinem/rust-cache@v2
         with:
-          key: ${{ matrix.settings.target }}
+          key: ${{ matrix.settings.target }}-cargo-${{ matrix.settings.host }}
 
-      - name: Install Dependencies
+      - name: Install dependencies
         run: npm ci
 
-      - name: Build Native Binding
-        run: npm run build -- --target ${{ matrix.settings.target }}
+      - name: Build
+        run: ${{ matrix.settings.build }}
         working-directory: crates/morphcss_node
 
-      - name: Upload Artifacts
+      - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: bindings-${{ matrix.settings.target }}
@@ -59,6 +68,10 @@ jobs:
   publish:
     name: Publish
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+      pull-requests: write
     needs:
       - build
     steps:
@@ -66,17 +79,17 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup Node.js
+      - name: Setup node
         uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: 'npm'
           registry-url: 'https://registry.npmjs.org'
 
-      - name: Install Dependencies
+      - name: Install dependencies
         run: npm ci
 
-      - name: Create NPM directories
+      - name: Create npm dirs
         run: npx napi create-npm-dirs
         working-directory: crates/morphcss_node
 
