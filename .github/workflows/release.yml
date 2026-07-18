@@ -39,6 +39,7 @@ jobs:
           targets: ${{ matrix.settings.target }}
 
       - name: Cache Cargo
+        if: matrix.settings.target != 'x86_64-unknown-linux-gnu'
         uses: Swatinem/rust-cache@v2
         with:
           key: ${{ matrix.settings.target }}
@@ -52,8 +53,8 @@ jobs:
           docker run --rm \
             -v $(pwd):/build \
             -w /build/crates/morphcss_node \
-            ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-debian-amd64 \
-            bash -c "npm install && napi build --platform --release --target x86_64-unknown-linux-gnu"
+            ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-debian \
+            bash -c "npm install && node_modules/.bin/napi build --platform --release --target x86_64-unknown-linux-gnu"
 
       - name: Build Native Binding (macOS / Windows)
         if: matrix.settings.target != 'x86_64-unknown-linux-gnu'
