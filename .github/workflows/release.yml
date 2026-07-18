@@ -84,25 +84,71 @@ jobs:
         with:
           path: artifacts
 
-      - name: Distribute Native Bindings
-        run: node_modules/.bin/napi artifacts --cwd crates/morphcss_node --build-output-dir $(pwd)/artifacts
-
-      - name: Verify Bindings Distributed
-        run: ls -la crates/morphcss_node/npm/*/
-
-      - name: Prepare Native Packages
-        run: node_modules/.bin/napi prepublish -t npm --cwd crates/morphcss_node
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Publish Native Platform Packages
+      - name: Build and Publish Native Platform Packages
+        shell: bash
         run: |
-          for dir in crates/morphcss_node/npm/*/; do
-            if [ -f "$dir/package.json" ]; then
-              echo "Publishing $dir..."
-              npm publish "$dir" --access public || echo "Already published, skipping."
+          VERSION=$(node -p "require('./crates/morphcss_node/package.json').version")
+          PKG_NAME="@morph-css/node"
+          echo "Publishing native packages for $PKG_NAME@$VERSION"
+
+          declare -A PLATFORMS
+          PLATFORMS["x86_64-unknown-linux-gnu"]="linux-x64-gnu"
+          PLATFORMS["aarch64-apple-darwin"]="darwin-arm64"
+          PLATFORMS["x86_64-apple-darwin"]="darwin-x64"
+          PLATFORMS["x86_64-pc-windows-msvc"]="win32-x64-msvc"
+
+          declare -A OS_MAP
+          OS_MAP["linux-x64-gnu"]="linux"
+          OS_MAP["darwin-arm64"]="darwin"
+          OS_MAP["darwin-x64"]="darwin"
+          OS_MAP["win32-x64-msvc"]="win32"
+
+          declare -A CPU_MAP
+          CPU_MAP["linux-x64-gnu"]="x64"
+          CPU_MAP["darwin-arm64"]="arm64"
+          CPU_MAP["darwin-x64"]="x64"
+          CPU_MAP["win32-x64-msvc"]="x64"
+
+          OPTIONAL_DEPS=""
+
+          for TRIPLE in "${!PLATFORMS[@]}"; do
+            PLATFORM="${PLATFORMS[$TRIPLE]}"
+            SUB_PKG="$PKG_NAME-$PLATFORM"
+            SUB_DIR="crates/morphcss_node/npm/$PLATFORM"
+            BINARY="morphcss-node.$PLATFORM.node"
+            ARTIFACT_FILE="artifacts/bindings-$TRIPLE/$BINARY"
+
+            if [ ! -f "$ARTIFACT_FILE" ]; then
+              echo "WARNING: Artifact not found: $ARTIFACT_FILE, skipping."
+              continue
             fi
+
+            mkdir -p "$SUB_DIR"
+            cp "$ARTIFACT_FILE" "$SUB_DIR/$BINARY"
+
+            cat > "$SUB_DIR/package.json" <<EOF
+          {
+            "name": "$SUB_PKG",
+            "version": "$VERSION",
+            "description": "Native binary for $PKG_NAME on ${OS_MAP[$PLATFORM]} ${CPU_MAP[$PLATFORM]}",
+            "os": ["${OS_MAP[$PLATFORM]}"],
+            "cpu": ["${CPU_MAP[$PLATFORM]}"],
+            "main": "$BINARY",
+            "files": ["$BINARY"],
+            "license": "MIT",
+            "repository": {
+              "type": "git",
+              "url": "https://github.com/CodeReb00t/morphcss.git"
+            }
+          }
+          EOF
+
+            echo "Publishing $SUB_PKG..."
+            npm publish "$SUB_DIR" --access public || echo "$SUB_PKG already published, skipping."
+            OPTIONAL_DEPS="$OPTIONAL_DEPS\"$SUB_PKG\": \"$VERSION\","
           done
+
+          echo "All platform packages processed."
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
@@ -117,3 +163,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
