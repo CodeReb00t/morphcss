@@ -179,6 +179,23 @@ jobs:
             console.log('optionalDependencies set to version', v);
           "
 
+      - name: Publish @morph-css/node
+        run: |
+          VERSION=$(node -p "require('./crates/morphcss_node/package.json').version")
+          echo "Publishing @morph-css/node@$VERSION..."
+          if npm publish crates/morphcss_node --access public; then
+            echo "✅ Successfully published @morph-css/node@$VERSION"
+          else
+            if npm view "@morph-css/node@$VERSION" version 2>/dev/null | grep -q "$VERSION"; then
+              echo "⏭️  @morph-css/node@$VERSION already on npm, skipping."
+            else
+              echo "❌ ERROR: Failed to publish @morph-css/node"
+              exit 1
+            fi
+          fi
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
       - name: Build JS Packages
         run: npm run build -w @morph-css/kit
 
@@ -190,4 +207,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
 
