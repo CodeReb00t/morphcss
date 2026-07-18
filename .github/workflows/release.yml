@@ -144,17 +144,16 @@ jobs:
           EOF
 
             echo "Publishing $SUB_PKG..."
-            if npm publish "$SUB_DIR" --access public; then
+            publish_output=$(npm publish "$SUB_DIR" --access public 2>&1)
+            publish_exit=$?
+            echo "$publish_output"
+            if [ $publish_exit -eq 0 ]; then
               echo "✅ Successfully published $SUB_PKG@$VERSION"
+            elif echo "$publish_output" | grep -qiE "cannot publish over|already_exists|E409"; then
+              echo "⏭️  $SUB_PKG@$VERSION already on npm, skipping."
             else
-              publish_exit=$?
-              echo "npm publish exited with $publish_exit, checking if $SUB_PKG@$VERSION is already on npm..."
-              if npm view "$SUB_PKG@$VERSION" version 2>/dev/null | grep -q "$VERSION"; then
-                echo "⏭️  $SUB_PKG@$VERSION already on npm, skipping."
-              else
-                echo "❌ ERROR: Failed to publish $SUB_PKG"
-                exit 1
-              fi
+              echo "❌ ERROR: Failed to publish $SUB_PKG"
+              exit 1
             fi
             OPTIONAL_DEPS="$OPTIONAL_DEPS\"$SUB_PKG\": \"$VERSION\","
           done
