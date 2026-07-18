@@ -58,12 +58,9 @@ jobs:
 
   publish:
     name: Publish
-    needs: build
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pull-requests: write
-      id-token: write
+    needs:
+      - build
     steps:
       - uses: actions/checkout@v4
         with:
@@ -79,132 +76,24 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
-      - name: Download Artifacts
+      - name: Create NPM directories
+        run: npx napi create-npm-dirs
+        working-directory: crates/morphcss_node
+
+      - name: Download all artifacts
         uses: actions/download-artifact@v4
         with:
-          path: artifacts
+          path: crates/morphcss_node/artifacts
 
-      - name: Build and Publish Native Platform Packages
-        shell: bash
-        run: |
-          VERSION=$(node -p "require('./crates/morphcss_node/package.json').version")
-          PKG_NAME="@morph-css/node"
-          echo "Publishing native packages for $PKG_NAME@$VERSION"
+      - name: Move artifacts
+        run: npm run artifacts
+        working-directory: crates/morphcss_node
 
-          declare -A PLATFORMS
-          PLATFORMS["x86_64-unknown-linux-gnu"]="linux-x64-gnu"
-          PLATFORMS["aarch64-apple-darwin"]="darwin-arm64"
-          PLATFORMS["x86_64-apple-darwin"]="darwin-x64"
-          PLATFORMS["x86_64-pc-windows-msvc"]="win32-x64-msvc"
-
-          declare -A OS_MAP
-          OS_MAP["linux-x64-gnu"]="linux"
-          OS_MAP["darwin-arm64"]="darwin"
-          OS_MAP["darwin-x64"]="darwin"
-          OS_MAP["win32-x64-msvc"]="win32"
-
-          declare -A CPU_MAP
-          CPU_MAP["linux-x64-gnu"]="x64"
-          CPU_MAP["darwin-arm64"]="arm64"
-          CPU_MAP["darwin-x64"]="x64"
-          CPU_MAP["win32-x64-msvc"]="x64"
-
-          OPTIONAL_DEPS=""
-
-          for TRIPLE in "${!PLATFORMS[@]}"; do
-            PLATFORM="${PLATFORMS[$TRIPLE]}"
-            SUB_PKG="$PKG_NAME-$PLATFORM"
-            SUB_DIR="crates/morphcss_node/npm/$PLATFORM"
-            BINARY="morphcss-node.$PLATFORM.node"
-            ARTIFACT_FILE="artifacts/bindings-$TRIPLE/$BINARY"
-
-            if [ ! -f "$ARTIFACT_FILE" ]; then
-              echo "WARNING: Artifact not found: $ARTIFACT_FILE, skipping."
-              continue
-            fi
-
-            mkdir -p "$SUB_DIR"
-            cp "$ARTIFACT_FILE" "$SUB_DIR/$BINARY"
-
-            cat > "$SUB_DIR/package.json" <<EOF
-          {
-            "name": "$SUB_PKG",
-            "version": "$VERSION",
-            "description": "Native binary for $PKG_NAME on ${OS_MAP[$PLATFORM]} ${CPU_MAP[$PLATFORM]}",
-            "os": ["${OS_MAP[$PLATFORM]}"],
-            "cpu": ["${CPU_MAP[$PLATFORM]}"],
-            "main": "$BINARY",
-            "files": ["$BINARY"],
-            "license": "MIT",
-            "repository": {
-              "type": "git",
-              "url": "https://github.com/CodeReb00t/morphcss.git"
-            }
-          }
-          EOF
-
-            echo "Publishing $SUB_PKG..."
-            publish_output=$(npm publish "$SUB_DIR" --access public 2>&1)
-            publish_exit=$?
-            echo "$publish_output"
-            if [ $publish_exit -eq 0 ]; then
-              echo "✅ Successfully published $SUB_PKG@$VERSION"
-            elif echo "$publish_output" | grep -qiE "cannot publish over|already_exists|E409"; then
-              echo "⏭️  $SUB_PKG@$VERSION already on npm, skipping."
-            else
-              echo "❌ ERROR: Failed to publish $SUB_PKG"
-              exit 1
-            fi
-            OPTIONAL_DEPS="$OPTIONAL_DEPS\"$SUB_PKG\": \"$VERSION\","
-          done
-
-          echo "All platform packages processed."
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Inject optionalDependencies into @morph-css/node
-        run: |
-          node -e "
-            const fs = require('fs');
-            const pkg = JSON.parse(fs.readFileSync('./crates/morphcss_node/package.json', 'utf8'));
-            const v = pkg.version;
-            pkg.optionalDependencies = {
-              '@morph-css/node-linux-x64-gnu': v,
-              '@morph-css/node-darwin-arm64': v,
-              '@morph-css/node-darwin-x64': v,
-              '@morph-css/node-win32-x64-msvc': v,
-            };
-            fs.writeFileSync('./crates/morphcss_node/package.json', JSON.stringify(pkg, null, 2) + '\n');
-            console.log('optionalDependencies set to version', v);
-          "
-
-      - name: Publish @morph-css/node
-        run: |
-          VERSION=$(node -p "require('./crates/morphcss_node/package.json').version")
-          echo "Publishing @morph-css/node@$VERSION..."
-          if npm publish crates/morphcss_node --access public; then
-            echo "✅ Successfully published @morph-css/node@$VERSION"
-          else
-            if npm view "@morph-css/node@$VERSION" version 2>/dev/null | grep -q "$VERSION"; then
-              echo "⏭️  @morph-css/node@$VERSION already on npm, skipping."
-            else
-              echo "❌ ERROR: Failed to publish @morph-css/node"
-              exit 1
-            fi
-          fi
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Build JS Packages
-        run: npm run build -w @morph-css/kit
-
-      - name: Create Release Pull Request or Publish
-        id: changesets
+      - name: Publish changesets
         uses: changesets/action@v1
         with:
           publish: npm run release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

@@ -24,16 +24,12 @@
     ]
   },
   "scripts": {
+    "artifacts": "napi artifacts",
     "build": "napi build --platform --release",
-    "build:debug": "napi build --platform"
+    "build:debug": "napi build --platform",
+    "prepublishOnly": "napi prepublish -t npm"
   },
   "devDependencies": {
     "@napi-rs/cli": "^3.0.0-alpha.52"
-  },
-  "optionalDependencies": {
-    "@morph-css/node-linux-x64-gnu": "0.4.6",
-    "@morph-css/node-darwin-arm64": "0.4.6",
-    "@morph-css/node-darwin-x64": "0.4.6",
-    "@morph-css/node-win32-x64-msvc": "0.4.6"
   }
 }
