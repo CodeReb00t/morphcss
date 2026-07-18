@@ -144,13 +144,39 @@ jobs:
           EOF
 
             echo "Publishing $SUB_PKG..."
-            npm publish "$SUB_DIR" --access public || echo "$SUB_PKG already published, skipping."
+            publish_output=$(npm publish "$SUB_DIR" --access public 2>&1)
+            publish_exit=$?
+            echo "$publish_output"
+            if [ $publish_exit -ne 0 ]; then
+              if echo "$publish_output" | grep -q "E409\|already_exists\|previously published\|cannot publish over"; then
+                echo "$SUB_PKG already published, skipping."
+              else
+                echo "ERROR: Failed to publish $SUB_PKG"
+                exit 1
+              fi
+            fi
             OPTIONAL_DEPS="$OPTIONAL_DEPS\"$SUB_PKG\": \"$VERSION\","
           done
 
           echo "All platform packages processed."
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Inject optionalDependencies into @morph-css/node
+        run: |
+          node -e "
+            const fs = require('fs');
+            const pkg = JSON.parse(fs.readFileSync('./crates/morphcss_node/package.json', 'utf8'));
+            const v = pkg.version;
+            pkg.optionalDependencies = {
+              '@morph-css/node-linux-x64-gnu': v,
+              '@morph-css/node-darwin-arm64': v,
+              '@morph-css/node-darwin-x64': v,
+              '@morph-css/node-win32-x64-msvc': v,
+            };
+            fs.writeFileSync('./crates/morphcss_node/package.json', JSON.stringify(pkg, null, 2) + '\n');
+            console.log('optionalDependencies set to version', v);
+          "
 
       - name: Build JS Packages
         run: npm run build -w @morph-css/kit

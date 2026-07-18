@@ -25,9 +25,7 @@
   },
   "scripts": {
     "build": "napi build --platform --release",
-    "build:debug": "napi build --platform",
-    "artifacts": "napi artifacts",
-    "prepublishOnly": "napi prepublish -t npm"
+    "build:debug": "napi build --platform"
   },
   "devDependencies": {
     "@napi-rs/cli": "^3.0.0-alpha.52"
