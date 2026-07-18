@@ -25,7 +25,7 @@ jobs:
             target: x86_64-pc-windows-msvc
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -33,6 +33,7 @@ jobs:
           cache: 'npm'
 
       - name: Install Rust
+        if: matrix.settings.target != 'x86_64-unknown-linux-gnu'
         uses: dtolnay/rust-toolchain@stable
         with:
           targets: ${{ matrix.settings.target }}
@@ -45,7 +46,17 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
-      - name: Build Native Binding
+      - name: Build Native Binding (Linux - Docker for GLIBC compatibility)
+        if: matrix.settings.target == 'x86_64-unknown-linux-gnu'
+        run: |
+          docker run --rm \
+            -v $(pwd):/build \
+            -w /build/crates/morphcss_node \
+            ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-debian-amd64 \
+            bash -c "npm install && napi build --platform --release --target x86_64-unknown-linux-gnu"
+
+      - name: Build Native Binding (macOS / Windows)
+        if: matrix.settings.target != 'x86_64-unknown-linux-gnu'
         run: npm run build -- --target ${{ matrix.settings.target }}
         working-directory: crates/morphcss_node
 
